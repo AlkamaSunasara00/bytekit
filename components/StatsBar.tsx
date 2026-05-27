@@ -2,10 +2,10 @@ import React from "react";
 
 export const StatsBar: React.FC = () => {
   const stats = [
-    { value: "40+", label: "Developer Tools" },
-    { value: "100%", label: "Free & Open Source" },
-    { value: "0", label: "Sign-ups or Databases" },
-    { value: "Offline", label: "Ready & Secure" },
+    { value: "42", label: "Developer Tools" },
+    { value: "MIT", label: "Open Source License" },
+    { value: "Local", label: "Local-First Execution" },
+    { value: "Offline", label: "Works Without Network" },
   ];
 
   return (

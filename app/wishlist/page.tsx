@@ -1,13 +1,12 @@
 "use client";
 
 import React from "react";
-import { Hero } from "../components/Hero";
-import { ToolsGrid } from "../components/ToolsGrid";
-import { useAppContext } from "../context/AppContext";
+import { ToolsGrid } from "../../components/ToolsGrid";
+import { useAppContext } from "../../context/AppContext";
 import { useRouter } from "next/navigation";
-import { ToolFilter } from "../components/page-views/types";
+import { ToolFilter } from "../../components/page-views/types";
 
-export default function Home() {
+export default function WishlistPage() {
   const {
     wishlistIds,
     historyEntries,
@@ -36,10 +35,9 @@ export default function Home() {
   };
 
   return (
-    <>
-      <Hero />
+    <div style={{ paddingTop: "24px" }}>
       <ToolsGrid
-        activeFilter="all"
+        activeFilter="wishlist"
         onFilterSelect={handleFilterSelect}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -50,6 +48,6 @@ export default function Home() {
         onClearWishlist={clearWishlist}
         onClearHistory={clearHistory}
       />
-    </>
+    </div>
   );
 }

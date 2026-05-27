@@ -1,13 +1,17 @@
 "use client";
 
 import React from "react";
-import { Hero } from "../components/Hero";
-import { ToolsGrid } from "../components/ToolsGrid";
+import { ToolsGrid } from "./ToolsGrid";
+import { GitGuideView } from "./page-views/GitGuideView";
 import { useAppContext } from "../context/AppContext";
 import { useRouter } from "next/navigation";
-import { ToolFilter } from "../components/page-views/types";
+import { ToolFilter } from "./page-views/types";
 
-export default function Home() {
+interface CategoryPageClientProps {
+  category: string;
+}
+
+export const CategoryPageClient: React.FC<CategoryPageClientProps> = ({ category }) => {
   const {
     wishlistIds,
     historyEntries,
@@ -17,6 +21,7 @@ export default function Home() {
     toggleWishlist,
     clearWishlist,
     clearHistory,
+    showToast,
     setActiveFilter,
   } = useAppContext();
 
@@ -35,11 +40,20 @@ export default function Home() {
     }
   };
 
+  const activeCategory = category as ToolFilter;
+
+  if (activeCategory === "git") {
+    return (
+      <div style={{ paddingTop: "24px" }}>
+        <GitGuideView onBack={() => handleFilterSelect("all")} showToast={showToast} />
+      </div>
+    );
+  }
+
   return (
-    <>
-      <Hero />
+    <div style={{ paddingTop: "24px" }}>
       <ToolsGrid
-        activeFilter="all"
+        activeFilter={activeCategory}
         onFilterSelect={handleFilterSelect}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -50,6 +64,6 @@ export default function Home() {
         onClearWishlist={clearWishlist}
         onClearHistory={clearHistory}
       />
-    </>
+    </div>
   );
-}
+};

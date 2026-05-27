@@ -39,16 +39,17 @@ export const Hero: React.FC = () => {
           <div
             className="badge"
             style={{
-              backgroundColor: "rgba(29, 158, 117, 0.1)",
-              color: "var(--accent)",
-              border: "1px solid rgba(29, 158, 117, 0.2)",
-              padding: "6px 12px",
+              backgroundColor: "rgba(83, 74, 183, 0.1)",
+              color: "var(--primary)",
+              border: "1px solid rgba(83, 74, 183, 0.2)",
+              padding: "6px 14px",
               borderRadius: "50px",
               fontSize: "12px",
               fontWeight: 700,
+              letterSpacing: "0.03em",
             }}
           >
-            100% Free · No Login · No DB
+            Local-First · Secure · Developer Utilities
           </div>
 
           <h1
@@ -93,7 +94,7 @@ export const Hero: React.FC = () => {
               Explore Tools
             </button>
             <a
-              href="https://github.com"
+              href="https://github.com/AlkamaSunasara00/bytekit"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-outline"
@@ -121,7 +122,7 @@ export const Hero: React.FC = () => {
               marginTop: "8px",
             }}
           >
-            <span>40+ tools</span>
+            <span>42 tools</span>
             <span style={{ color: "var(--border)" }}>·</span>
             <span>Works offline</span>
             <span style={{ color: "var(--border)" }}>·</span>
@@ -234,10 +235,10 @@ export const Hero: React.FC = () => {
                     <span className="mockup-json-number">true</span>,
                     <br />
                     <span className="mockup-json-key">{'"tools"'}</span>:{" "}
-                    <span className="mockup-json-number">40</span>,
+                    <span className="mockup-json-number">42</span>,
                     <br />
-                    <span className="mockup-json-key">{'"db"'}</span>:{" "}
-                    <span className="mockup-json-string">{'"none"'}</span>
+                    <span className="mockup-json-key">{'"security"'}</span>:{" "}
+                    <span className="mockup-json-string">{'"local-first"'}</span>
                   </div>
                   <span style={{ color: "#89DCEB" }}>{"}"}</span>
                 </div>

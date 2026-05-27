@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { AppLayout } from "../components/AppLayout";
 
 const dmSerifDisplay = DM_Serif_Display({
   weight: "400",
@@ -34,7 +35,10 @@ export default function RootLayout({
       lang="en"
       className={`${dmSerifDisplay.variable} ${dmSans.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <AppLayout>{children}</AppLayout>
+      </body>
     </html>
   );
 }
+
