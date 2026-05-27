@@ -73,6 +73,11 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
       );
     });
 
+  const activeCategory: "all" | "converters" | "encoding" | "text" | "css" | "generators" | "fun" =
+    activeFilter === "git" || activeFilter === "wishlist" || activeFilter === "history"
+      ? "all"
+      : activeFilter;
+
   return (
     <section id="tools-grid-section" style={{ padding: "64px 0", backgroundColor: "var(--bg)" }}>
       <div className="sticky-filter-bar">
@@ -183,7 +188,7 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
           />
         ) : (
           <CategoryView
-            activeCategory={activeFilter}
+            activeCategory={activeCategory}
             searchQuery={searchQuery}
             onCategorySelect={onFilterSelect}
             onSearchChange={onSearchChange}
