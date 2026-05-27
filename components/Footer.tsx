@@ -66,15 +66,23 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "10px",
               fontSize: "24px",
               fontFamily: "var(--font-display)",
               color: "#FFFFFF",
               fontWeight: "bold",
             }}
           >
-            <TerminalIcon size={22} stroke="#FFFFFF" />
-            <span>ByteKit</span>
+          <img
+            src="/bytekit-logo.png"
+            alt="ByteKit Logo"
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "contain",
+              borderRadius: "8px",
+            }}
+          />
           </a>
           <p style={{ color: "#888780", fontSize: "14px", maxWidth: "280px", lineHeight: "1.6" }}>
             Every tool a dev needs, right in the browser. Fast, 100% client-side, and privacy-first.

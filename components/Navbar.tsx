@@ -59,15 +59,23 @@ export const Navbar: React.FC<NavbarProps> = ({
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "8px",
+            gap: "10px",
             fontSize: "24px",
             fontFamily: "var(--font-display)",
-            color: "var(--primary)",
+            color: "#FFFFFF",
             fontWeight: "bold",
           }}
         >
-          <TerminalIcon size={22} stroke="var(--primary)" />
-          <span>ByteKit</span>
+          <img
+            src="/bytekit-logo.png"
+            alt="ByteKit Logo"
+            style={{
+              width: "100px",
+              height: "100px",
+              objectFit: "contain",
+              borderRadius: "8px",
+            }}
+          />
         </a>
 
         {/* Center: Nav links (Desktop) */}
