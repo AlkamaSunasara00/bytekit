@@ -2,7 +2,7 @@ import { ToolDefinition } from "../tools/registry";
 
 export type ToolCategory = ToolDefinition["category"];
 
-export type ToolFilter = "all" | ToolCategory | "wishlist" | "history";
+export type ToolFilter = "all" | ToolCategory | "wishlist" | "history" | "git";
 
 export interface ToolHistoryEntry {
   toolId: number;

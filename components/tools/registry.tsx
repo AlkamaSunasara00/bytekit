@@ -1,5 +1,6 @@
 import React from "react";
 import { ToolProps } from "./ToolInterfaces";
+import { SqlFormatterExplainer, JsonPathExtractor } from "./NewTools";
 
 // Converters
 import {
@@ -364,5 +365,19 @@ export const TOOLS: ToolDefinition[] = [
     description: "Describe what a variable represents to obtain Pascal/camel suggestions.",
     category: "fun",
     component: VariableSuggester,
+  },
+  {
+    id: 41,
+    name: "SQL Formatter + Explainer",
+    description: "Indents and formats queries to clean UPPERCASE keywords, with automatically generated explanation comments.",
+    category: "text",
+    component: SqlFormatterExplainer,
+  },
+  {
+    id: 42,
+    name: "JSON Path Extractor",
+    description: "Render collapsible JSON syntax tree and click nodes to instantly extract dot, bracket, or optional-chain paths.",
+    category: "converters",
+    component: JsonPathExtractor,
   },
 ];

@@ -11,6 +11,7 @@ import { Toast, ToastItem } from "../components/Toast";
 import { HeartIcon } from "../components/icons";
 import { ToolFilter, ToolHistoryEntry } from "../components/page-views/types";
 import { ToolDefinition, TOOLS } from "../components/tools/registry";
+import { GitGuideView } from "../components/page-views/GitGuideView";
 
 const STORAGE_KEYS = {
   wishlist: "bytekit:wishlist",
@@ -30,6 +31,7 @@ const VALID_FILTERS: ToolFilter[] = [
   "fun",
   "wishlist",
   "history",
+  "git",
 ];
 
 const isValidHistoryEntry = (value: unknown): value is ToolHistoryEntry => {
@@ -192,21 +194,27 @@ export default function Home() {
         historyCount={historyEntries.length}
       />
 
-      <Hero />
-      <StatsBar />
+      {activeFilter === "git" ? (
+        <GitGuideView onBack={() => handleFilterSelect("all")} showToast={showToast} />
+      ) : (
+        <>
+          <Hero />
+          <StatsBar />
 
-      <ToolsGrid
-        activeFilter={activeFilter}
-        onFilterSelect={handleFilterSelect}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        onToolSelect={handleToolSelect}
-        wishlistIds={wishlistIds}
-        historyEntries={historyEntries}
-        onToggleWishlist={handleToggleWishlist}
-        onClearWishlist={handleClearWishlist}
-        onClearHistory={handleClearHistory}
-      />
+          <ToolsGrid
+            activeFilter={activeFilter}
+            onFilterSelect={handleFilterSelect}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            onToolSelect={handleToolSelect}
+            wishlistIds={wishlistIds}
+            historyEntries={historyEntries}
+            onToggleWishlist={handleToggleWishlist}
+            onClearWishlist={handleClearWishlist}
+            onClearHistory={handleClearHistory}
+          />
+        </>
+      )}
 
       <Footer onFilterSelect={handleFilterSelect} showToast={showToast} />
 

@@ -558,3 +558,13 @@ textarea {
     width: 100%;
   }
 }
+
+/* Custom focus states requested globally */
+input[type="text"]:focus,
+input[type="search"]:focus,
+textarea:focus {
+  outline: none !important;
+  border: 1.5px solid #534AB7 !important;
+  box-shadow: 0 0 0 3px #EEEDFE !important;
+  background: #FFFFFF !important;
+}
