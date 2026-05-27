@@ -1,83 +1,99 @@
 import React from "react";
-import { TOOLS, ToolDefinition } from "./tools/registry";
-import { IconMap, SearchIcon } from "./icons";
+import { SearchIcon } from "./icons";
+import { CategoryView } from "./page-views/CategoryView";
+import { HistoryView } from "./page-views/HistoryView";
+import { WishlistView } from "./page-views/WishlistView";
+import { ToolFilter, ToolHistoryEntry } from "./page-views/types";
+import { ToolDefinition, TOOLS } from "./tools/registry";
 
 interface ToolsGridProps {
-  activeCategory: string;
-  onCategorySelect: (category: string) => void;
+  activeFilter: ToolFilter;
+  onFilterSelect: (filter: ToolFilter) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
   onToolSelect: (tool: ToolDefinition) => void;
+  wishlistIds: number[];
+  historyEntries: ToolHistoryEntry[];
+  onToggleWishlist: (tool: ToolDefinition) => void;
+  onClearWishlist: () => void;
+  onClearHistory: () => void;
 }
 
+const categories: Array<{ label: string; value: ToolFilter }> = [
+  { label: "All", value: "all" },
+  { label: "Converters", value: "converters" },
+  { label: "Encoding", value: "encoding" },
+  { label: "Text", value: "text" },
+  { label: "CSS", value: "css" },
+  { label: "Generators", value: "generators" },
+  { label: "Fun", value: "fun" },
+  { label: "Wishlist", value: "wishlist" },
+  { label: "History", value: "history" },
+];
+
 export const ToolsGrid: React.FC<ToolsGridProps> = ({
-  activeCategory,
-  onCategorySelect,
+  activeFilter,
+  onFilterSelect,
   searchQuery,
   onSearchChange,
   onToolSelect,
+  wishlistIds,
+  historyEntries,
+  onToggleWishlist,
+  onClearWishlist,
+  onClearHistory,
 }) => {
-  const categories = [
-    { label: "All", value: "all" },
-    { label: "Converters", value: "converters" },
-    { label: "Encoding", value: "encoding" },
-    { label: "Text", value: "text" },
-    { label: "CSS", value: "css" },
-    { label: "Generators", value: "generators" },
-    { label: "Fun", value: "fun" },
-  ];
+  const normalizedQuery = searchQuery.toLowerCase();
 
-  // Map category values to display titles
-  const categoryTitles: Record<string, string> = {
-    converters: "Converters & Parsers",
-    encoding: "Encoding & Cryptography",
-    text: "Text & Code Utilities",
-    css: "CSS & Design Builders",
-    generators: "Content Generators",
-    fun: "Developer Fun Utilities",
-  };
+  const wishlistTools = TOOLS.filter((tool) => wishlistIds.includes(tool.id)).filter((tool) => {
+    if (!searchQuery) {
+      return true;
+    }
 
-  // Filter tools based on selected category and live search query
-  const filteredTools = TOOLS.filter((tool) => {
-    const matchesCategory =
-      activeCategory === "all" || tool.category === activeCategory;
-    const matchesSearch =
-      tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tool.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return (
+      tool.name.toLowerCase().includes(normalizedQuery) ||
+      tool.description.toLowerCase().includes(normalizedQuery)
+    );
   });
 
-  const getCategoryColor = (cat: string) => {
-    switch (cat) {
-      case "converters":
-        return "var(--color-converters)";
-      case "encoding":
-        return "var(--color-encoding)";
-      case "text":
-        return "var(--color-text)";
-      case "css":
-        return "var(--color-css)";
-      case "generators":
-        return "var(--color-generators)";
-      case "fun":
-        return "var(--color-fun)";
-      default:
-        return "var(--primary)";
-    }
-  };
+  const historyTools = historyEntries
+    .map((entry) => {
+      const tool = TOOLS.find((candidate) => candidate.id === entry.toolId);
+      return tool ? { tool, lastOpenedAt: entry.lastOpenedAt, openCount: entry.openCount } : null;
+    })
+    .filter((entry): entry is NonNullable<typeof entry> => entry !== null)
+    .filter((entry) => {
+      if (!searchQuery) {
+        return true;
+      }
+
+      return (
+        entry.tool.name.toLowerCase().includes(normalizedQuery) ||
+        entry.tool.description.toLowerCase().includes(normalizedQuery)
+      );
+    });
 
   return (
     <section id="tools-grid-section" style={{ padding: "64px 0", backgroundColor: "var(--bg)" }}>
-      {/* Category Filter Tabs (Sticky below nav) */}
       <div className="sticky-filter-bar">
-        <div className="container" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}>
+        <div
+          className="container"
+          style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "16px" }}
+        >
           <div className="filter-tabs-scroll" style={{ width: "100%" }}>
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat.value;
+            {categories.map((category) => {
+              const isActive = activeFilter === category.value;
+              const countLabel =
+                category.value === "wishlist"
+                  ? wishlistIds.length
+                  : category.value === "history"
+                    ? historyEntries.length
+                    : null;
+
               return (
                 <button
-                  key={cat.value}
-                  onClick={() => onCategorySelect(cat.value)}
+                  key={category.value}
+                  onClick={() => onFilterSelect(category.value)}
                   style={{
                     padding: "8px 16px",
                     borderRadius: "50px",
@@ -89,20 +105,21 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
                     border: "1px solid",
                     borderColor: isActive ? "var(--primary)" : "var(--border)",
                   }}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={(event) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
-                      e.currentTarget.style.color = "var(--text)";
+                      event.currentTarget.style.backgroundColor = "rgba(0, 0, 0, 0.03)";
+                      event.currentTarget.style.color = "var(--text)";
                     }
                   }}
-                  onMouseLeave={(e) => {
+                  onMouseLeave={(event) => {
                     if (!isActive) {
-                      e.currentTarget.style.backgroundColor = "transparent";
-                      e.currentTarget.style.color = "var(--muted)";
+                      event.currentTarget.style.backgroundColor = "transparent";
+                      event.currentTarget.style.color = "var(--muted)";
                     }
                   }}
                 >
-                  {cat.label}
+                  {category.label}
+                  {countLabel !== null ? ` (${countLabel})` : ""}
                 </button>
               );
             })}
@@ -110,195 +127,70 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
         </div>
       </div>
 
-      {/* Mobile Sticky Search Bar */}
       <div className="mobile-search-container" style={{ marginTop: "16px", display: "none" }}>
         <div className="container">
           <div style={{ position: "relative", width: "100%" }}>
-            <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--muted)" }}>
+            <span
+              style={{
+                position: "absolute",
+                left: "12px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                color: "var(--muted)",
+              }}
+            >
               <SearchIcon size={18} />
             </span>
             <input
               type="text"
-              placeholder="Search all developer tools..."
+              placeholder="Search developer tools..."
               value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
+              onChange={(event) => onSearchChange(event.target.value)}
               style={{
                 width: "100%",
                 padding: "10px 14px 10px 40px",
                 border: "1px solid var(--border)",
                 borderRadius: "8px",
                 fontSize: "14px",
-                backgroundColor: "var(--surface)"
+                backgroundColor: "var(--surface)",
               }}
             />
           </div>
         </div>
       </div>
 
-      {/* Main Grid View */}
       <div className="container" style={{ marginTop: "40px" }}>
-        {/* Render segmented list if viewing "All" and no search query */}
-        {activeCategory === "all" && !searchQuery ? (
-          <div style={{ display: "flex", flexDirection: "column", gap: "56px" }}>
-            {Object.keys(categoryTitles).map((catKey) => {
-              const catTools = TOOLS.filter((t) => t.category === catKey);
-              const color = getCategoryColor(catKey);
-
-              return (
-                <div key={catKey} style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-                  <div>
-                    <span
-                      style={{
-                        color: color,
-                        fontSize: "11px",
-                        fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.1em",
-                        display: "block",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      {catKey}
-                    </span>
-                    <h2 style={{ fontSize: "32px", fontFamily: "var(--font-display)" }}>
-                      {categoryTitles[catKey]}
-                    </h2>
-                  </div>
-
-                  <div className="tools-grid-layout">
-                    {catTools.map((tool) => {
-                      const Icon = IconMap[tool.category];
-                      return (
-                        <div key={tool.id} className="tool-card" onClick={() => onToolSelect(tool)}>
-                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%" }}>
-                            <div className="tool-card-icon-wrapper" style={{ backgroundColor: color }}>
-                              <Icon size={20} stroke="#FFFFFF" />
-                            </div>
-                            <span
-                              className="badge"
-                              style={{
-                                backgroundColor: "rgba(0, 0, 0, 0.03)",
-                                color: "var(--muted)",
-                                fontSize: "10px",
-                                border: "1px solid var(--border)",
-                              }}
-                            >
-                              {tool.category}
-                            </span>
-                          </div>
-                          <div>
-                            <h3 style={{ fontSize: "16px", fontWeight: 600, fontFamily: "var(--font-body)", color: "var(--text)", margin: "0 0 6px 0" }}>
-                              {tool.name}
-                            </h3>
-                            <p style={{ fontSize: "13px", color: "var(--muted)", lineHeight: "1.4", margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                              {tool.description}
-                            </p>
-                          </div>
-                          <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", alignSelf: "flex-start" }}>
-                            Open Tool →
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        {activeFilter === "wishlist" ? (
+          <WishlistView
+            tools={wishlistTools}
+            searchQuery={searchQuery}
+            onToolSelect={onToolSelect}
+            onToggleWishlist={onToggleWishlist}
+            onBrowseTools={() => onFilterSelect("all")}
+            onClearSearch={() => onSearchChange("")}
+            onClearWishlist={onClearWishlist}
+          />
+        ) : activeFilter === "history" ? (
+          <HistoryView
+            entries={historyTools}
+            searchQuery={searchQuery}
+            wishlistIds={wishlistIds}
+            onToolSelect={onToolSelect}
+            onToggleWishlist={onToggleWishlist}
+            onBrowseTools={() => onFilterSelect("all")}
+            onClearSearch={() => onSearchChange("")}
+            onClearHistory={onClearHistory}
+          />
         ) : (
-          /* Filtered Flat Grid View */
-          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-            <div>
-              <span
-                style={{
-                  color: "var(--accent)",
-                  fontSize: "11px",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  display: "block",
-                  marginBottom: "4px",
-                }}
-              >
-                Filtered List
-              </span>
-              <h2 style={{ fontSize: "32px", fontFamily: "var(--font-display)" }}>
-                {searchQuery ? `Search Results for "${searchQuery}"` : categoryTitles[activeCategory] || "Developer Tools"}
-              </h2>
-            </div>
-
-            {filteredTools.length > 0 ? (
-              <div className="tools-grid-layout">
-                {filteredTools.map((tool) => {
-                  const Icon = IconMap[tool.category];
-                  const color = getCategoryColor(tool.category);
-                  return (
-                    <div key={tool.id} className="tool-card" onClick={() => onToolSelect(tool)}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", width: "100%" }}>
-                        <div className="tool-card-icon-wrapper" style={{ backgroundColor: color }}>
-                          <Icon size={20} stroke="#FFFFFF" />
-                        </div>
-                        <span
-                          className="badge"
-                          style={{
-                            backgroundColor: "rgba(0, 0, 0, 0.03)",
-                            color: "var(--muted)",
-                            fontSize: "10px",
-                            border: "1px solid var(--border)",
-                          }}
-                        >
-                          {tool.category}
-                        </span>
-                      </div>
-                      <div>
-                        <h3 style={{ fontSize: "16px", fontWeight: 600, fontFamily: "var(--font-body)", color: "var(--text)", margin: "0 0 6px 0" }}>
-                          {tool.name}
-                        </h3>
-                        <p style={{ fontSize: "13px", color: "var(--muted)", lineHeight: "1.4", margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                          {tool.description}
-                        </p>
-                      </div>
-                      <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--primary)", alignSelf: "flex-start" }}>
-                        Open Tool →
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              /* No matching results alert state */
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "64px 24px",
-                  borderRadius: "10px",
-                  border: "1px dashed var(--border)",
-                  backgroundColor: "var(--surface)",
-                  textAlign: "center",
-                  gap: "12px",
-                }}
-              >
-                <div style={{ fontSize: "32px" }}>🔍</div>
-                <h3 style={{ fontSize: "18px", fontWeight: 600, margin: 0 }}>No tools matched your search</h3>
-                <p style={{ color: "var(--muted)", fontSize: "14px", margin: 0, maxWidth: "340px" }}>
-                  Try searching for keywords like "Base64", "JSON", "Shadow", "UUID", or "Regex".
-                </p>
-                <button
-                  className="btn btn-outline"
-                  onClick={() => {
-                    onSearchChange("");
-                    onCategorySelect("all");
-                  }}
-                  style={{ marginTop: "8px" }}
-                >
-                  Clear Filters
-                </button>
-              </div>
-            )}
-          </div>
+          <CategoryView
+            activeCategory={activeFilter}
+            searchQuery={searchQuery}
+            onCategorySelect={onFilterSelect}
+            onSearchChange={onSearchChange}
+            onToolSelect={onToolSelect}
+            wishlistIds={wishlistIds}
+            onToggleWishlist={onToggleWishlist}
+          />
         )}
       </div>
 
@@ -307,6 +199,30 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 24px;
+        }
+
+        .saved-view-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 64px 24px;
+          border-radius: 10px;
+          border: 1px dashed var(--border);
+          background-color: var(--surface);
+          text-align: center;
+          gap: 12px;
+        }
+
+        .saved-view-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 999px;
+          background-color: var(--primary-light);
+          color: var(--primary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
         @media (max-width: 992px) {
@@ -320,6 +236,7 @@ export const ToolsGrid: React.FC<ToolsGridProps> = ({
             grid-template-columns: 1fr;
             gap: 16px;
           }
+
           .mobile-search-container {
             display: block !important;
           }

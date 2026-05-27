@@ -1,37 +1,40 @@
 import React, { useState } from "react";
-import { TerminalIcon } from "./icons";
+import { ToolFilter } from "./page-views/types";
 
 interface FooterProps {
-  onCategorySelect: (category: string) => void;
+  onFilterSelect: (filter: ToolFilter) => void;
   showToast: (msg: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) => {
+const quickLinks: Array<{ label: string; value: ToolFilter }> = [
+  { label: "Converters", value: "converters" },
+  { label: "Encoding & Crypto", value: "encoding" },
+  { label: "Text & Code", value: "text" },
+  { label: "CSS & Design", value: "css" },
+  { label: "Generators", value: "generators" },
+  { label: "Fun", value: "fun" },
+  { label: "Wishlist", value: "wishlist" },
+  { label: "History", value: "history" },
+];
+
+export const Footer: React.FC<FooterProps> = ({ onFilterSelect, showToast }) => {
   const [suggestion, setSuggestion] = useState("");
 
-  const categories = [
-    { label: "Converters", value: "converters" },
-    { label: "Encoding & Crypto", value: "encoding" },
-    { label: "Text & Code", value: "text" },
-    { label: "CSS & Design", value: "css" },
-    { label: "Generators", value: "generators" },
-    { label: "Fun", value: "fun" },
-  ];
-
-  const handleCategoryClick = (val: string, e: React.MouseEvent) => {
-    e.preventDefault();
-    onCategorySelect(val);
+  const handleCategoryClick = (value: ToolFilter, event: React.MouseEvent) => {
+    event.preventDefault();
+    onFilterSelect(value);
     const element = document.getElementById("tools-grid-section");
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!suggestion.trim()) return;
-    
-    // Simulate suggestion save
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!suggestion.trim()) {
+      return;
+    }
+
     showToast(`Tool suggestion "${suggestion.trim()}" sent! Thank you.`);
     setSuggestion("");
   };
@@ -55,12 +58,11 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
           borderBottom: "1px solid rgba(241, 239, 232, 0.1)",
         }}
       >
-        {/* Left: Branding */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <a
             href="#"
-            onClick={(e) => {
-              e.preventDefault();
+            onClick={(event) => {
+              event.preventDefault();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             style={{
@@ -73,26 +75,23 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
               fontWeight: "bold",
             }}
           >
-          <img
-            src="/bytekit-logo.png"
-            alt="ByteKit Logo"
-            style={{
-              width: "100px",
-              height: "100px",
-              objectFit: "contain",
-              borderRadius: "8px",
-            }}
-          />
+            <img
+              src="/bytekit-logo.png"
+              alt="ByteKit Logo"
+              style={{
+                width: "100px",
+                height: "100px",
+                objectFit: "contain",
+                borderRadius: "8px",
+              }}
+            />
           </a>
           <p style={{ color: "#888780", fontSize: "14px", maxWidth: "280px", lineHeight: "1.6" }}>
             Every tool a dev needs, right in the browser. Fast, 100% client-side, and privacy-first.
           </p>
-          <span style={{ fontSize: "12px", color: "var(--accent)" }}>
-            Built with love for devs ♥
-          </span>
+          <span style={{ fontSize: "12px", color: "var(--accent)" }}>Built with love for devs</span>
         </div>
 
-        {/* Center: Quick links */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <h4
             style={{
@@ -107,25 +106,28 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
             Quick Links
           </h4>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            {categories.map((cat) => (
+            {quickLinks.map((link) => (
               <a
-                key={cat.value}
-                href={`#${cat.value}`}
-                onClick={(e) => handleCategoryClick(cat.value, e)}
+                key={link.value}
+                href={`#${link.value}`}
+                onClick={(event) => handleCategoryClick(link.value, event)}
                 style={{
                   fontSize: "14px",
                   color: "#888780",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
-                onMouseLeave={(e) => (e.currentTarget.style.color = "#888780")}
+                onMouseEnter={(event) => {
+                  event.currentTarget.style.color = "#FFFFFF";
+                }}
+                onMouseLeave={(event) => {
+                  event.currentTarget.style.color = "#888780";
+                }}
               >
-                {cat.label}
+                {link.label}
               </a>
             ))}
           </div>
         </div>
 
-        {/* Right: Suggest a Tool */}
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <h4
             style={{
@@ -140,14 +142,14 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
             Suggest a Tool
           </h4>
           <p style={{ color: "#888780", fontSize: "14px", lineHeight: "1.5" }}>
-            Missing something? Tell us what utility you need, and we'll build it.
+            Missing something? Tell us what utility you need, and we&apos;ll build it.
           </p>
           <form onSubmit={handleSubmit} style={{ display: "flex", gap: "8px", marginTop: "4px" }}>
             <input
               type="text"
               placeholder="e.g. JWT Generator, Hex to RGB..."
               value={suggestion}
-              onChange={(e) => setSuggestion(e.target.value)}
+              onChange={(event) => setSuggestion(event.target.value)}
               style={{
                 backgroundColor: "rgba(255, 255, 255, 0.05)",
                 border: "1px solid rgba(241, 239, 232, 0.15)",
@@ -174,7 +176,6 @@ export const Footer: React.FC<FooterProps> = ({ onCategorySelect, showToast }) =
         </div>
       </div>
 
-      {/* Bottom Bar */}
       <div
         className="container"
         style={{

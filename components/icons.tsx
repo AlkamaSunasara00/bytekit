@@ -38,6 +38,19 @@ export const CloseIcon: React.FC<IconProps> = ({ size = 20, ...props }) => (
   </svg>
 );
 
+export const HeartIcon: React.FC<IconProps> = ({ size = 20, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <path d="M12 21s-6.716-4.348-9.193-8.104C.95 10.07 1.61 5.9 5.13 4.24c2.274-1.072 4.784-.4 6.87 2.02 2.087-2.42 4.597-3.093 6.87-2.02 3.52 1.66 4.18 5.83 2.324 8.656C18.716 16.652 12 21 12 21Z" />
+  </svg>
+);
+
+export const ClockIcon: React.FC<IconProps> = ({ size = 20, ...props }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </svg>
+);
+
 export const HamburgerIcon: React.FC<IconProps> = ({ size = 20, ...props }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
     <line x1="3" y1="12" x2="21" y2="12" />

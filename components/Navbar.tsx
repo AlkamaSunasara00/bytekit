@@ -1,35 +1,44 @@
 import React, { useState } from "react";
-import { TerminalIcon, HamburgerIcon, CloseIcon, SearchIcon } from "./icons";
+import { CloseIcon, SearchIcon, HamburgerIcon, HeartIcon, ClockIcon } from "./icons";
+import { ToolFilter } from "./page-views/types";
 
 interface NavbarProps {
-  activeCategory: string;
-  onCategorySelect: (category: string) => void;
+  activeFilter: ToolFilter;
+  onFilterSelect: (filter: ToolFilter) => void;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  wishlistCount: number;
+  historyCount: number;
 }
 
+const navLinks: Array<{ label: string; value: ToolFilter }> = [
+  { label: "Tools", value: "all" },
+  { label: "Converters", value: "converters" },
+  { label: "Generators", value: "generators" },
+  { label: "CSS", value: "css" },
+  { label: "Fun", value: "fun" },
+];
+
+const quickViews = [
+  { label: "Wishlist", value: "wishlist", icon: HeartIcon },
+  { label: "History", value: "history", icon: ClockIcon },
+] as const;
+
 export const Navbar: React.FC<NavbarProps> = ({
-  activeCategory,
-  onCategorySelect,
+  activeFilter,
+  onFilterSelect,
   searchQuery,
   onSearchChange,
+  wishlistCount,
+  historyCount,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
 
-  const navLinks = [
-    { label: "Tools", value: "all" },
-    { label: "Converters", value: "converters" },
-    { label: "Generators", value: "generators" },
-    { label: "CSS", value: "css" },
-    { label: "Fun", value: "fun" },
-  ];
-
-  const handleLinkClick = (value: string) => {
-    onCategorySelect(value);
+  const handleLinkClick = (value: ToolFilter) => {
+    onFilterSelect(value);
     setMobileMenuOpen(false);
-    
-    // Smooth scroll to tools section
+
     const element = document.getElementById("tools-grid-section");
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -46,13 +55,13 @@ export const Navbar: React.FC<NavbarProps> = ({
           justifyContent: "space-between",
           height: "100%",
           position: "relative",
+          gap: "16px",
         }}
       >
-        {/* Left: Logo */}
         <a
           href="#"
-          onClick={(e) => {
-            e.preventDefault();
+          onClick={(event) => {
+            event.preventDefault();
             handleLinkClick("all");
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
@@ -64,6 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             fontFamily: "var(--font-display)",
             color: "#FFFFFF",
             fontWeight: "bold",
+            flexShrink: 0,
           }}
         >
           <img
@@ -78,26 +88,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           />
         </a>
 
-        {/* Center: Nav links (Desktop) */}
         <div
           className="desktop-only"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "32px",
+            gap: "24px",
             height: "100%",
+            flex: 1,
+            justifyContent: "center",
           }}
         >
           {navLinks.map((link) => {
-            const isActive =
-              (link.value === "all" && activeCategory === "all") ||
-              (link.value !== "all" && activeCategory === link.value);
+            const isActive = activeFilter === link.value;
             return (
               <a
                 key={link.label}
                 href={`#${link.value}`}
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={(event) => {
+                  event.preventDefault();
                   handleLinkClick(link.value);
                 }}
                 style={{
@@ -129,16 +138,59 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </div>
 
-        {/* Right Actions (Desktop) */}
         <div
           className="desktop-only"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "16px",
+            gap: "12px",
+            flexShrink: 0,
           }}
         >
-          {/* Search Icon / Input */}
+          {quickViews.map((view) => {
+            const isActive = activeFilter === view.value;
+            const Icon = view.icon;
+            const count = view.value === "wishlist" ? wishlistCount : historyCount;
+
+            return (
+              <button
+                key={view.value}
+                onClick={() => handleLinkClick(view.value)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "8px 12px",
+                  borderRadius: "999px",
+                  border: "1px solid",
+                  borderColor: isActive ? "rgba(83, 74, 183, 0.2)" : "var(--border)",
+                  backgroundColor: isActive ? "var(--primary-light)" : "transparent",
+                  color: isActive ? "var(--primary)" : "var(--muted)",
+                  fontSize: "13px",
+                  fontWeight: 600,
+                }}
+              >
+                <Icon size={15} fill={view.value === "wishlist" && isActive ? "currentColor" : "none"} />
+                <span>{view.label}</span>
+                <span
+                  style={{
+                    minWidth: "20px",
+                    height: "20px",
+                    borderRadius: "999px",
+                    backgroundColor: isActive ? "rgba(83, 74, 183, 0.12)" : "rgba(0, 0, 0, 0.05)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "0 6px",
+                    color: "inherit",
+                  }}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+
           <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
             {desktopSearchOpen ? (
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -146,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   type="text"
                   placeholder="Search tools..."
                   value={searchQuery}
-                  onChange={(e) => onSearchChange(e.target.value)}
+                  onChange={(event) => onSearchChange(event.target.value)}
                   autoFocus
                   style={{
                     width: "180px",
@@ -193,7 +245,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Mobile Hamburger & Actions */}
         <div
           className="mobile-only"
           style={{
@@ -217,7 +268,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Mobile menu dropdown */}
       {mobileMenuOpen && (
         <div
           className="mobile-only"
@@ -240,15 +290,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <a
                 key={link.label}
                 href={`#${link.value}`}
-                onClick={(e) => {
-                  e.preventDefault();
+                onClick={(event) => {
+                  event.preventDefault();
                   handleLinkClick(link.value);
                 }}
                 style={{
                   fontSize: "16px",
                   fontWeight: 600,
-                  color:
-                    activeCategory === link.value ? "var(--primary)" : "var(--text)",
+                  color: activeFilter === link.value ? "var(--primary)" : "var(--text)",
                   padding: "8px 0",
                   borderBottom: "1px solid rgba(0, 0, 0, 0.03)",
                 }}
@@ -256,6 +305,34 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {link.label}
               </a>
             ))}
+            {quickViews.map((view) => {
+              const count = view.value === "wishlist" ? wishlistCount : historyCount;
+
+              return (
+                <a
+                  key={view.value}
+                  href={`#${view.value}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handleLinkClick(view.value);
+                  }}
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: activeFilter === view.value ? "var(--primary)" : "var(--text)",
+                    padding: "8px 0",
+                    borderBottom: "1px solid rgba(0, 0, 0, 0.03)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "12px",
+                  }}
+                >
+                  <span>{view.label}</span>
+                  <span style={{ fontSize: "13px", color: "var(--muted)" }}>{count}</span>
+                </a>
+              );
+            })}
           </div>
 
           <button
@@ -268,20 +345,22 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       )}
 
-      {/* CSS overrides for desktop/mobile viewport responsiveness */}
       <style jsx global>{`
         @media (min-width: 769px) {
           .desktop-only {
             display: flex !important;
           }
+
           .mobile-only {
             display: none !important;
           }
         }
+
         @media (max-width: 768px) {
           .desktop-only {
             display: none !important;
           }
+
           .mobile-only {
             display: flex !important;
           }

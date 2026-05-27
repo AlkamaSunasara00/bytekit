@@ -34,7 +34,8 @@ export const StatsBar: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               gap: "4px",
-              borderRight: idx < stats.length - 1 ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
+              borderRight:
+                idx < stats.length - 1 ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
               padding: "0 16px",
             }}
           >

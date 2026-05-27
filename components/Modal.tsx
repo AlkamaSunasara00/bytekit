@@ -6,9 +6,10 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  actions?: React.ReactNode;
 }
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
+export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, actions }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -34,9 +35,12 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
           <h3 style={{ fontSize: "22px", fontFamily: "var(--font-display)", color: "var(--text)" }}>
             {title}
           </h3>
-          <button className="close-btn" onClick={onClose} aria-label="Close Tool">
-            <CloseIcon size={16} />
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            {actions}
+            <button className="close-btn" onClick={onClose} aria-label="Close Tool">
+              <CloseIcon size={16} />
+            </button>
+          </div>
         </div>
         <div className="modal-body">{children}</div>
       </div>

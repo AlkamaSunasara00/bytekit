@@ -27,7 +27,6 @@ export const Hero: React.FC = () => {
           zIndex: 5,
         }}
       >
-        {/* Left Side (60%) */}
         <div
           style={{
             flex: "0 0 58%",
@@ -37,7 +36,6 @@ export const Hero: React.FC = () => {
             gap: "24px",
           }}
         >
-          {/* Badge */}
           <div
             className="badge"
             style={{
@@ -53,7 +51,6 @@ export const Hero: React.FC = () => {
             100% Free · No Login · No DB
           </div>
 
-          {/* Heading */}
           <h1
             style={{
               fontSize: "52px",
@@ -65,10 +62,9 @@ export const Hero: React.FC = () => {
           >
             Every tool a dev
             <br />
-            needs — right <span className="hero-wavy-underline">here</span>.
+            needs - right <span className="hero-wavy-underline">here</span>.
           </h1>
 
-          {/* Subtitle */}
           <p
             style={{
               fontSize: "18px",
@@ -79,11 +75,10 @@ export const Hero: React.FC = () => {
               margin: 0,
             }}
           >
-            JSON, Base64, Regex, UUID, CSS tools and more. All run directly in your
-            browser. Zero backend tracking.
+            JSON, Base64, Regex, UUID, CSS tools and more. All run directly in your browser. Zero
+            backend tracking.
           </p>
 
-          {/* Buttons */}
           <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             <button
               onClick={handleExploreClick}
@@ -116,7 +111,6 @@ export const Hero: React.FC = () => {
             </a>
           </div>
 
-          {/* Trust Line */}
           <div
             style={{
               fontSize: "13px",
@@ -135,14 +129,12 @@ export const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Side (40%) */}
         <div
           className="hero-visuals-container"
           style={{
             flex: "0 0 38%",
           }}
         >
-          {/* Floating code card mockup */}
           <div
             className="float-mockup"
             style={{
@@ -155,7 +147,6 @@ export const Hero: React.FC = () => {
               overflow: "hidden",
             }}
           >
-            {/* Terminal Window Header */}
             <div
               style={{
                 padding: "12px 16px",
@@ -166,7 +157,6 @@ export const Hero: React.FC = () => {
                 backgroundColor: "#181824",
               }}
             >
-              {/* Window buttons */}
               <div style={{ display: "flex", gap: "6px" }}>
                 <span
                   style={{
@@ -197,7 +187,6 @@ export const Hero: React.FC = () => {
                 />
               </div>
 
-              {/* Fake tab bar */}
               <div style={{ display: "flex", gap: "8px" }}>
                 {(["json", "base64", "uuid"] as const).map((tab) => {
                   const isActive = activeTab === tab;
@@ -225,7 +214,6 @@ export const Hero: React.FC = () => {
               </div>
             </div>
 
-            {/* Terminal Body */}
             <div
               style={{
                 padding: "20px",
@@ -239,17 +227,17 @@ export const Hero: React.FC = () => {
                 <div>
                   <span style={{ color: "#89DCEB" }}>{"{"}</span>
                   <div style={{ paddingLeft: "16px" }}>
-                    <span className="mockup-json-key">"status"</span>:{" "}
-                    <span className="mockup-json-string">"success"</span>,
+                    <span className="mockup-json-key">{'"status"'}</span>:{" "}
+                    <span className="mockup-json-string">{'"success"'}</span>,
                     <br />
-                    <span className="mockup-json-key">"clientSide"</span>:{" "}
+                    <span className="mockup-json-key">{'"clientSide"'}</span>:{" "}
                     <span className="mockup-json-number">true</span>,
                     <br />
-                    <span className="mockup-json-key">"tools"</span>:{" "}
+                    <span className="mockup-json-key">{'"tools"'}</span>:{" "}
                     <span className="mockup-json-number">40</span>,
                     <br />
-                    <span className="mockup-json-key">"db"</span>:{" "}
-                    <span className="mockup-json-string">"none"</span>
+                    <span className="mockup-json-key">{'"db"'}</span>:{" "}
+                    <span className="mockup-json-string">{'"none"'}</span>
                   </div>
                   <span style={{ color: "#89DCEB" }}>{"}"}</span>
                 </div>
@@ -257,33 +245,27 @@ export const Hero: React.FC = () => {
 
               {activeTab === "base64" && (
                 <div>
-                  <span style={{ color: "#6E6D8F" }}>// Encode string</span>
+                  <span style={{ color: "#6E6D8F" }}>{"// Encode string"}</span>
                   <br />
                   <span style={{ color: "#C6A0F6" }}>const</span> encoded ={" "}
-                  <span className="mockup-json-string">"Qnl0ZUtpdA=="</span>;
+                  <span className="mockup-json-string">{'"Qnl0ZUtpdA=="'}</span>;
                   <br />
                   <br />
-                  <span style={{ color: "#6E6D8F" }}>// Decodes to</span>
+                  <span style={{ color: "#6E6D8F" }}>{"// Decodes to"}</span>
                   <br />
-                  <span style={{ color: "#8BD5CA" }}>"ByteKit"</span>
+                  <span style={{ color: "#8BD5CA" }}>{'"ByteKit"'}</span>
                 </div>
               )}
 
               {activeTab === "uuid" && (
                 <div>
-                  <span style={{ color: "#6E6D8F" }}>// Bulk v4 UUIDs</span>
+                  <span style={{ color: "#6E6D8F" }}>{"// Bulk v4 UUIDs"}</span>
                   <br />
-                  <span style={{ color: "#E06C75" }}>
-                    8f42d2a1-ef4b-489e-9988-1c4b9d03828d
-                  </span>
+                  <span style={{ color: "#E06C75" }}>8f42d2a1-ef4b-489e-9988-1c4b9d03828d</span>
                   <br />
-                  <span style={{ color: "#E06C75" }}>
-                    b6d92cc9-9a74-4b53-b26a-9311e9fdfcf4
-                  </span>
+                  <span style={{ color: "#E06C75" }}>b6d92cc9-9a74-4b53-b26a-9311e9fdfcf4</span>
                   <br />
-                  <span style={{ color: "#E06C75" }}>
-                    3c5f4bfa-4001-4475-a8de-6b22b10a26cc
-                  </span>
+                  <span style={{ color: "#E06C75" }}>3c5f4bfa-4001-4475-a8de-6b22b10a26cc</span>
                 </div>
               )}
             </div>
@@ -296,6 +278,7 @@ export const Hero: React.FC = () => {
           h1 {
             font-size: 38px !important;
           }
+
           p {
             font-size: 16px !important;
           }

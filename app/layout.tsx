@@ -19,8 +19,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ByteKit — Every tool a dev needs, right in the browser",
-  description: "Free client-side developer tools. JSON formatting, Base64, Regex, Cryptography, CSS generation, and more. 100% offline-ready, no login required.",
+  title: "ByteKit - Every tool a dev needs, right in the browser",
+  description:
+    "Free client-side developer tools. JSON formatting, Base64, Regex, Cryptography, CSS generation, and more. 100% offline-ready, no login required.",
 };
 
 export default function RootLayout({
@@ -37,6 +38,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
-
